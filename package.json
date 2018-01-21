@@ -1,0 +1,25 @@
+{
+  "name": "package",
+  "version": "1.0.0",
+  "description": "Canvas game pracite. Native JS, mb P5.js or ThreeJS using in future.",
+  "main": "app.js",
+  "scripts": {
+    "test": "node app.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/AndriiSiuta/Game.git"
+  },
+  "author": "andrii",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/AndriiSiuta/Game/issues"
+  },
+  "homepage": "https://github.com/AndriiSiuta/Game#readme",
+  "dependencies": {},
+  "devDependencies": {
+    "eslint": "^4.16.0",
+    "eslint-config-airbnb-base": "^12.1.0",
+    "eslint-plugin-import": "^2.8.0"
+  }
+}
