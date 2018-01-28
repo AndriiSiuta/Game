@@ -10,8 +10,8 @@ const BALL_RADIUS = 10;
 let DX = 2;
 let DY = -2;
 
-let x = canvas.width/2;
-let y = canvas.height/2;
+let x = canvas.width / 2;
+let y = canvas.height - 30;
 
 let moveLeft = false;
 let moveRight = false;
@@ -20,42 +20,18 @@ const PADDLE_HEIGHT = 10;
 const PADDLE_WIDTH = 100;
 let PADDLE_X = (canvas.width - PADDLE_WIDTH) / 2;
 
+const BRICKS_HEIGHT = 10;
+const BRICKS_WIDTH = 25;
+
 document.addEventListener('keyup', popKeyPaddle, false);
 document.addEventListener('keydown', pushKeyPaddle, false);
 
-function drawBall(color) {
+function drawBall() {
 	ctx.beginPath();
-	ctx.arc(x, y, BALL_RADIUS, 0, Math.PI*2);
-	ctx.fillStyle = color;
+	ctx.arc(x, y, BALL_RADIUS, 0, Math.PI * 2);
+	ctx.fillStyle = 'red';
 	ctx.fill();
 	ctx.closePath();
-}
-
-function draw() {
-	let ballColor = '#00ffdb';
-	ctx.clearRect(0, 0, canvas.width, canvas.height);
-
-	drawBall(ballColor);
-	drawPaddle();
-	if(y + DY > canvas.height - BALL_RADIUS || y + DY < BALL_RADIUS) {
-		DY = -DY;
-		ballColor = randomColor();
-	}
-
-	if(x + DX > canvas.width || x + DX < BALL_RADIUS) {
-		DX = -DX;
-		ballColor = randomColor();
-	}
-
-	if(moveRight && PADDLE_X < (canvas.width - PADDLE_WIDTH)) {
-		PADDLE_X += 15;
-	}
-
-	else if(moveLeft && PADDLE_X > 0) {
-		PADDLE_X -= 15;
-	}
-	x += DX;
-	y += DY;
 }
 
 function randomColor() {
@@ -77,7 +53,7 @@ function drawPaddle() {
 }
 
 function pushKeyPaddle(e) {
-	switch(e.keyCode) {
+	switch (e.keyCode) {
 		case 37:
 			moveLeft = true;
 			break;
@@ -90,7 +66,7 @@ function pushKeyPaddle(e) {
 }
 
 function popKeyPaddle(e) {
-	switch(e.keyCode) {
+	switch (e.keyCode) {
 		case 37:
 			moveLeft = false;
 			break;
@@ -102,4 +78,62 @@ function popKeyPaddle(e) {
 	}
 }
 
-setInterval(draw, 10);
+function drawBricks() {
+	let xPos = 0;
+	let yPos = 0;
+
+	let deltaX = 50;
+	let deltaY = 50;
+
+	for(let i = 0; i < 3; i++) {
+		for(let j = 0; j < 3; j++) {
+			ctx.beginPath();
+			ctx.rect(deltaX, deltaY, BRICKS_WIDTH, BRICKS_HEIGHT);
+			ctx.fillStyle = 'orange';
+			ctx.fill();
+			ctx.closePath();
+			deltaX += 50;
+		}
+		deltaY += 50;
+		deltaX = 50;
+	}
+
+}
+
+function gameLoop() {
+	ctx.clearRect(0, 0, canvas.width, canvas.height);
+	drawBricks();
+	drawBall();
+	drawPaddle();
+
+	if (y + DY < BALL_RADIUS) {
+		DY = -DY;
+	} else if (y + DY > canvas.height - BALL_RADIUS - PADDLE_HEIGHT) {
+		if (x > PADDLE_X && x < PADDLE_X + PADDLE_WIDTH) {
+			DY = -DY;
+		}
+		// else {
+		// 	document.location.reload();
+		// }
+	}
+
+	if (x + DX > canvas.width - BALL_RADIUS || x + DX < BALL_RADIUS) {
+		DX = -DX;
+	}
+
+	// PAD CONTROLLER
+	if (moveRight && PADDLE_X < (canvas.width - PADDLE_WIDTH)) {
+		PADDLE_X += 10;
+	}
+
+	else if (moveLeft && PADDLE_X > 0) {
+		PADDLE_X -= 10;
+	}
+	x += DX;
+	y += DY;
+}
+
+setInterval(gameLoop, 10);
+
+// ToDo Refactor this file, add initialize function with constant
+// ToDo change this to module export
